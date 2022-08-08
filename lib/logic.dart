@@ -10,40 +10,17 @@ class GameLogic {
       List.generate(9, (index) => Player.empty);
 
   bool winChecker(String player, int index, List<int> scoreBoard) {
-    int score = player == "X" ? 1 : -1;
-    scoreBoard[index] = score;
+    int row = index ~/ 3; // floor value 8~/3=2
 
-    if ((scoreBoard[0]) == scoreBoard[1] &&
-        scoreBoard[1] == scoreBoard[2] &&
-        scoreBoard[0] != 0) {
-      return true;
-    } else if (scoreBoard[3] == scoreBoard[4] &&
-        scoreBoard[4] == scoreBoard[5] &&
-        scoreBoard[3] != 0) {
-      return true;
-    } else if (scoreBoard[6] == scoreBoard[7] &&
-        scoreBoard[7] == scoreBoard[8] &&
-        scoreBoard[6] != 0) {
-      return true;
-    } else if (scoreBoard[0] == scoreBoard[3] &&
-        scoreBoard[3] == scoreBoard[6] &&
-        scoreBoard[0] != 0) {
-      return true;
-    } else if (scoreBoard[1] == scoreBoard[4] &&
-        scoreBoard[4] == scoreBoard[7] &&
-        scoreBoard[1] != 0) {
-      return true;
-    } else if (scoreBoard[2] == scoreBoard[5] &&
-        scoreBoard[8] == scoreBoard[5] &&
-        scoreBoard[2] != 0) {
-      return true;
-    } else if (scoreBoard[0] == scoreBoard[4] &&
-        scoreBoard[4] == scoreBoard[8] &&
-        scoreBoard[0] != 0) {
-      return true;
-    } else if (scoreBoard[2] == scoreBoard[4] &&
-        scoreBoard[4] == scoreBoard[6] &&
-        scoreBoard[2] != 0) {
+    int col = index % 3;
+    int score = player == "X" ? 1 : -1;
+
+    scoreBoard[row] += score;
+    scoreBoard[3 + col] += score;
+    if (row == col) scoreBoard[2 * 3] += score;
+    if (3 - 1 - col == row) scoreBoard[2 * 3 + 1] += score;
+
+    if (scoreBoard.contains(3) || scoreBoard.contains(-3)) {
       return true;
     } else {
       return false;

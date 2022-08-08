@@ -120,7 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
           Center(
             child: Text(
               result,
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
+              style: const TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
             ),
           ),
           GestureDetector(
