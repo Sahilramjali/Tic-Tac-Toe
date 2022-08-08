@@ -45,6 +45,12 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    scoreBoard.clear();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -52,6 +58,8 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
             height: MediaQuery.of(context).size.width,
@@ -88,14 +96,17 @@ class _MyHomePageState extends State<MyHomePage> {
                           }
                         },
                   child: Container(
-                    height: 100,
-                    width: 100,
-                    color: Colors.blue,
+                    height: 50,
+                    width: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(15),
+                    ),
                     child: Center(
                       child: Text(
                         game.board![index],
                         style: TextStyle(
-                            fontSize: 24,
+                            fontSize: 45,
                             color: game.board![index] == 'X'
                                 ? Colors.white
                                 : Colors.black),
@@ -107,7 +118,10 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           Center(
-            child: Text(result),
+            child: Text(
+              result,
+              style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
+            ),
           ),
           GestureDetector(
             onTap: () {
@@ -117,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 gameOver = false;
                 currentPlay = "X";
                 count = 0;
-                result='';
+                result = '';
               });
             },
             child: Container(
