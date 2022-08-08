@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tictac/logic.dart';
 
 void main() {
   runApp(const MyApp());
@@ -32,6 +33,17 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String currentPlay = 'X';
   int count = 0;
+  GameLogic game = GameLogic();
+  bool gameOver = false;
+  String result = '';
+  List<int> scoreBoard = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+  @override
+  void initState() {
+    super.initState();
+    game.board = GameLogic.initGameBoard();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,32 +51,86 @@ class _MyHomePageState extends State<MyHomePage> {
         centerTitle: true,
         title: Text(widget.title),
       ),
-      body: Center(
-        child: GridView.count(
-          padding: const EdgeInsets.all(18),
-          crossAxisCount: 3,
-          mainAxisSpacing: 8,
-          crossAxisSpacing: 8,
-          children: List.generate(9, (index) {
-            return InkWell(
-              onTap: () {},
-              child: Container(
-                height: 100,
-                width: 100,
-                color: Colors.blue,
-                child: Center(
-                  child: Text(
-                    currentPlay,
-                    style: TextStyle(
-                        fontSize: 24,
-                        color:
-                            currentPlay == 'X' ? Colors.white : Colors.black),
+      body: Column(
+        children: [
+          SizedBox(
+            height: MediaQuery.of(context).size.width,
+            width: MediaQuery.of(context).size.width,
+            child: GridView.count(
+              padding: const EdgeInsets.all(18),
+              crossAxisCount: 3,
+              mainAxisSpacing: 8,
+              crossAxisSpacing: 8,
+              children: List.generate(9, (index) {
+                return InkWell(
+                  onTap: gameOver
+                      ? null
+                      : () {
+                          if (game.board![index] == '') {
+                            setState(() {
+                              game.board![index] = currentPlay;
+                              count++;
+                              gameOver = game.winChecker(
+                                  currentPlay, index, scoreBoard);
+
+                              if (gameOver) {
+                                result = "$currentPlay is winner";
+                              } else if (!gameOver && count == 9) {
+                                result = "Draw";
+                                gameOver = true;
+                              }
+                              if (currentPlay == 'X') {
+                                currentPlay = "O";
+                              } else {
+                                currentPlay = 'X';
+                              }
+                            });
+                          }
+                        },
+                  child: Container(
+                    height: 100,
+                    width: 100,
+                    color: Colors.blue,
+                    child: Center(
+                      child: Text(
+                        game.board![index],
+                        style: TextStyle(
+                            fontSize: 24,
+                            color: game.board![index] == 'X'
+                                ? Colors.white
+                                : Colors.black),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            );
-          }),
-        ),
+                );
+              }),
+            ),
+          ),
+          Center(
+            child: Text(result),
+          ),
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                game.board = GameLogic.initGameBoard();
+                scoreBoard = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+                gameOver = false;
+                currentPlay = "X";
+                count = 0;
+                result='';
+              });
+            },
+            child: Container(
+                height: 50,
+                width: 50,
+                color: Colors.blue,
+                child: const Center(
+                  child: Icon(
+                    Icons.restart_alt_rounded,
+                  ),
+                )),
+          ),
+        ],
       ),
     );
   }
